@@ -35,7 +35,19 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{app.config['SQLALCHEMY_D
 # Replace the connection string with your actual PostgreSQL connection string
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-
+def get_options():
+    options = [
+        "Here are the some key words you can type from list:",
+        "1. Main Menu",
+        "2. Booking",
+        "3. Chikku",
+        "4. payment",
+        "5. data security",
+        "6. appointment",
+        "7. services",
+        "8. contact Us"
+    ]
+    return options
 class Intent(Base):
     __tablename__ = 'chatbot_data'
     # __table_args__ = {'schema': 'chikkuchatbot'}
@@ -155,14 +167,60 @@ def ask_question():
             relevant_intent = intent
 
     # Respond based on the relevant intent
-    if relevant_intent and max_score >= 70:  # Adjust the threshold as needed
+
+    # Call the function
+    # Call the function
+
+    if relevant_intent and max_score >= 60:  # Adjust the threshold as needed
         response =relevant_intent.responses
     else:
-        response = "I'm sorry, I don't understand the question."
+        response =get_options()
 
     return jsonify({'response': response})
 
 
+@app.route('/api/intents/<tag>', methods=['GET', 'PUT'])
+def get_or_update_intent(tag):
+    # Create a session within the application context
+    with app.app_context():
+        Session = sessionmaker(bind=engine)
+        session = Session()
 
+        # Retrieve the intent by tag
+        existing_intent = session.query(Intent).filter_by(tag=tag).first()
+
+        # Check if the intent exists
+        if not existing_intent:
+            return jsonify({'error': 'Intent not found'}), 404
+
+        if request.method == 'GET':
+            # Return intent details
+            intent_details = {
+                'id': existing_intent.id,
+                'tag': existing_intent.tag,
+                'patterns': existing_intent.patterns,
+                'responses': existing_intent.responses
+            }
+            return jsonify({'intent': intent_details})
+
+        elif request.method == 'PUT':
+            # Extract data from the request
+            data = request.get_json()
+
+            new_patterns = data.get('new_patterns', [])
+            new_responses = data.get('new_responses', [])
+
+            # Validate data
+            if not new_patterns and not new_responses:
+                return jsonify({'error': 'Both new_patterns and new_responses are missing'}), 400
+
+            # Update patterns and responses
+            existing_intent.patterns = new_patterns
+            existing_intent.responses = new_responses
+
+            # Commit the changes
+            session.commit()
+
+            return jsonify({'message': f'Intent with tag {tag} updated successfully'})
 if __name__ == '__main__':
     app.run(debug=True)
