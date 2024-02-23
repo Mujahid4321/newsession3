@@ -36,16 +36,20 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{app.config['SQLALCHEMY_D
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 def get_options():
-    options = [
-        "Here are the some key words you can type from list:",
-        "1. Main Menu",
+     options = [
+        "Heartly welcome in chikku service,I am here to assist you ",
+        "Here are the some KEY WORDS you can type from the list:",
+
+        "1. Chikku",
         "2. Booking",
-        "3. Chikku",
-        "4. payment",
-        "5. data security",
-        "6. appointment",
-        "7. services",
-        "8. contact Us"
+        "3. services",
+        "4. work",
+        "5. Safety",
+        "6. Request",
+        "7. quote",
+        "8. status",
+        "9. payment",
+        "10. contact Us",
     ]
     return options
 class Intent(Base):
