@@ -11,16 +11,10 @@ nlp = spacy.load("en_core_web_sm")
 
 app = Flask(__name__)
 CORS(app)
-
 Base = declarative_base()
-
-
 app = Flask(__name__)
 CORS(app)
-
 Base = declarative_base()
-
-
 app.config['SQLALCHEMY_DATABASE_USER'] = 'chikku_chatbot_data_user'
 app.config['SQLALCHEMY_DATABASE_PASSWORD'] = 'x07zIKvY9Zan4lRB3iSntvQgQD9fjVi6'
 app.config['SQLALCHEMY_DATABASE_HOST'] = 'dpg-cmqv2u21hbls73fm81tg-a.oregon-postgres.render.com'
@@ -30,13 +24,11 @@ app.config['SQLALCHEMY_DATABASE_NAME'] = 'chikku_chatbot_data'
 # Construct the new URI
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{app.config['SQLALCHEMY_DATABASE_USER']}:{quote_plus(app.config['SQLALCHEMY_DATABASE_PASSWORD'])}@{app.config['SQLALCHEMY_DATABASE_HOST']}:{app.config['SQLALCHEMY_DATABASE_PORT']}/{app.config['SQLALCHEMY_DATABASE_NAME']}"
 
-
-
 # Replace the connection string with your actual PostgreSQL connection string
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 def get_options():
-     options = [
+    options = [
         "Heartly welcome in chikku service,I am here to assist you ",
         "Here are the some KEY WORDS you can type from the list:",
 
@@ -175,7 +167,7 @@ def ask_question():
     # Call the function
     # Call the function
 
-    if relevant_intent and max_score >= 60:  # Adjust the threshold as needed
+    if relevant_intent and max_score >=70:  # Adjust the threshold as needed
         response =relevant_intent.responses
     else:
         response =get_options()
