@@ -218,5 +218,30 @@ def get_or_update_intent(tag):
             session.commit()
 
             return jsonify({'message': f'Intent with tag {tag} updated successfully'})
+
+
+@app.route('/api/intents/<int:intent_id>', methods=['GET'])
+def get_or_update_intent_by_id(intent_id):
+    # Create a session within the application context
+    with app.app_context():
+        Session = sessionmaker(bind=engine)
+        session = Session()
+
+        # Retrieve the intent by ID
+        existing_intent = session.query(Intent).filter_by(id=intent_id).first()
+
+        # Check if the intent exists
+        if not existing_intent:
+            return jsonify({'error': 'Intent not found'}), 404
+
+        # Return intent details
+        intent_details = {
+            'id': existing_intent.id,
+            'tag': existing_intent.tag,
+            'patterns': existing_intent.patterns,
+            'responses': existing_intent.responses
+        }
+        return jsonify({'intent': intent_details})
+
 if __name__ == '__main__':
     app.run(debug=True)
